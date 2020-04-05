@@ -1,31 +1,41 @@
 package chess.domain.chesspiece;
 
-import chess.domain.Position;
-import chess.domain.Team;
+import chess.domain.game.Team;
+import chess.domain.move.Direction;
 
-import java.util.List;
+import static chess.domain.game.Team.BLACK;
 
 public abstract class ChessPiece {
-    private String name;
-    protected Position position;
+    private final ChessPieceInfo chessPieceInfo;
     private final Team team;
 
-    public ChessPiece(String name, Position position, Team team) {
-        this.name = name;
-        if (team == Team.BLACK) {
-            this.name = name.toUpperCase();
-        }
-        this.position = position;
+    public ChessPiece(ChessPieceInfo chessPieceInfo, Team team) {
+        this.chessPieceInfo = chessPieceInfo;
         this.team = team;
     }
 
-    public abstract boolean canMove(Position position);
-
-    public abstract List<Position> makeCanMovePositions();
-
+    public boolean isSameTeam(Team team) {
+        return this.team == team;
+    }
 
     public String getName() {
+        String name = chessPieceInfo.getName();
+
+        if (team == BLACK) {
+            return name.toUpperCase();
+        }
         return name;
     }
 
+    public Direction[] getMoveDirections() {
+        return chessPieceInfo.getMoveDirections();
+    }
+
+    public Team getTeam() {
+        return team;
+    }
+
+    public double getPoint() {
+        return chessPieceInfo.getPoint();
+    }
 }

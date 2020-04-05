@@ -1,64 +1,89 @@
 package chess.factory;
 
-import chess.domain.Position;
-import chess.domain.Row;
-import chess.domain.Team;
+import chess.domain.board.Board;
+import chess.domain.board.Row;
 import chess.domain.chesspiece.*;
+import chess.domain.game.GameStatus;
+import chess.domain.game.Team;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static chess.domain.board.BoardInfo.BOARD_MAX_INDEX;
+import static chess.domain.board.BoardInfo.BOARD_MIN_INDEX;
+import static chess.domain.game.Team.BLACK;
+import static chess.domain.game.Team.WHITE;
+
 public class BoardFactory {
-    public static List<Row> createBoard() {
+    private static final int BLANK_ROW_SIZE_BASE = 0;
+    private static final int BLANK_ROW_SIZE = 4;
+
+    private BoardFactory() {
+    }
+
+    public static Board createBoard() {
         List<Row> board = new ArrayList<>();
-        for (int i = 1; i <= 8; i++) {
-            board.add(createRow(i));
-        }
-        return board;
+        GameStatus gameStatus = new GameStatus();
+
+        addWhiteTeamRow(board);
+        addBlankRows(board);
+        addBlackTeamRow(board);
+        return new Board(board, gameStatus);
     }
 
+    public static Board createBlankBoard(GameStatus gameStatus) {
+        List<Row> board = new ArrayList<>();
+        for (int i = BOARD_MIN_INDEX; i <= BOARD_MAX_INDEX; i++) {
+            addBlankRow(board);
+        }
+        return new Board(board, gameStatus);
+    }
 
-    public static Row createRow(int i) {
+    private static void addWhiteTeamRow(List<Row> board) {
+        addMainPieces(board, WHITE);
+        addPawn(board, WHITE);
+    }
+
+    private static void addBlankRows(List<Row> board) {
+        for (int i = BLANK_ROW_SIZE_BASE; i < BLANK_ROW_SIZE; i++) {
+            addBlankRow(board);
+        }
+    }
+
+    private static void addBlackTeamRow(List<Row> board) {
+        addPawn(board, BLACK);
+        addMainPieces(board, BLACK);
+    }
+
+    private static void addMainPieces(List<Row> board, Team team) {
         List<ChessPiece> chessPieces = new ArrayList<>();
-        if (i == 8) {
-            chessPieces.add(new Rook(new Position(8, 'a'), Team.BLACK));
-            chessPieces.add(new Knight(new Position(8, 'b'), Team.BLACK));
-            chessPieces.add(new Bishop(new Position(8, 'f'), Team.BLACK));
-            chessPieces.add(new Queen(new Position(8, 'd'), Team.BLACK));
-            chessPieces.add(new King(new Position(8, 'e'), Team.BLACK));
-            chessPieces.add(new Bishop(new Position(8, 'c'), Team.BLACK));
-            chessPieces.add(new Knight(new Position(8, 'g'), Team.BLACK));
-            chessPieces.add(new Rook(new Position(8, 'h'), Team.BLACK));
-            return new Row(chessPieces);
-        }
-        if (i == 7) {
-            for (char col = 'a'; col <= 'h'; col++) {
-                chessPieces.add(new Pawn(new Position(7, col), Team.BLACK));
-            }
-            return new Row(chessPieces);
-        }
-        if (i == 2) {
-            for (char col = 'a'; col <= 'h'; col++) {
-                chessPieces.add(new Pawn(new Position(2, col), Team.WHITE));
-            }
-            return new Row(chessPieces);
-        }
-        if (i == 1) {
-            chessPieces.add(new Rook(new Position(1, 'a'), Team.WHITE));
-            chessPieces.add(new Knight(new Position(1, 'b'), Team.WHITE));
-            chessPieces.add(new Bishop(new Position(1, 'f'), Team.WHITE));
-            chessPieces.add(new Queen(new Position(1, 'd'), Team.WHITE));
-            chessPieces.add(new King(new Position(1, 'e'), Team.WHITE));
-            chessPieces.add(new Bishop(new Position(1, 'c'), Team.WHITE));
-            chessPieces.add(new Knight(new Position(1, 'g'), Team.WHITE));
-            chessPieces.add(new Rook(new Position(1, 'h'), Team.WHITE));
-            return new Row(chessPieces);
-        }
 
-        for (char col = 'a'; col <= 'h'; col++) {
-            chessPieces.add(new Blank(new Position(i, col), Team.BLANK));
-        }
-        return new Row(chessPieces);
+        chessPieces.add(new Rook(team));
+        chessPieces.add(new Knight(team));
+        chessPieces.add(new Bishop(team));
+        chessPieces.add(new Queen(team));
+        chessPieces.add(new King(team));
+        chessPieces.add(new Bishop(team));
+        chessPieces.add(new Knight(team));
+        chessPieces.add(new Rook(team));
+        board.add(Row.of(chessPieces));
     }
 
+    private static void addPawn(List<Row> board, Team team) {
+        List<ChessPiece> chessPieces = new ArrayList<>();
+
+        for (int i = BOARD_MIN_INDEX; i <= BOARD_MAX_INDEX; i++) {
+            chessPieces.add(new Pawn(team));
+        }
+        board.add(Row.of(chessPieces));
+    }
+
+    private static void addBlankRow(List<Row> board) {
+        List<ChessPiece> chessPieces = new ArrayList<>();
+
+        for (int i = BOARD_MIN_INDEX; i <= BOARD_MAX_INDEX; i++) {
+            chessPieces.add(new Blank());
+        }
+        board.add(Row.of(chessPieces));
+    }
 }

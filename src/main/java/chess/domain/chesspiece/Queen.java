@@ -1,23 +1,11 @@
 package chess.domain.chesspiece;
 
-import chess.domain.Move;
-import chess.domain.Position;
-import chess.domain.Team;
+import chess.domain.game.Team;
 
-import java.util.List;
+import static chess.domain.chesspiece.ChessPieceInfo.QUEEN;
 
 public class Queen extends ChessPiece {
-    public Queen(Position position, Team team) {
-        super("q", position, team);
-    }
-
-    @Override
-    public boolean canMove(Position position) {
-        return false;
-    }
-
-    @Override
-    public List<Position> makeCanMovePositions() {
-        return Move.makePassablePath(MoveRules.QUEEN, this.position);
+    public Queen(Team team) {
+        super(QUEEN, team);
     }
 }

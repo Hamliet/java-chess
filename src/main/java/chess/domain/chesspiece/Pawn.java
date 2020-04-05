@@ -1,26 +1,37 @@
 package chess.domain.chesspiece;
 
-import chess.domain.Move;
-import chess.domain.Position;
-import chess.domain.Team;
+import chess.domain.game.Team;
+import chess.domain.move.Position;
 
-import java.util.List;
+import static chess.domain.chesspiece.ChessPieceInfo.PAWN;
+import static chess.domain.game.Team.BLACK;
+import static chess.domain.game.Team.WHITE;
 
 public class Pawn extends ChessPiece {
     boolean isFirstMove = true;
 
-    public Pawn(Position position, Team team) {
-        super("p", position, team);
+    public Pawn(Team team) {
+        super(PAWN, team);
     }
 
-    @Override
-    public boolean canMove(Position position) {
-        return false;
+    public boolean isFirstMove() {
+        return isFirstMove;
     }
 
-    @Override
-    public List<Position> makeCanMovePositions() {
+    public void firstMoveComplete() {
+        isFirstMove = false;
+    }
 
-        return Move.makePassablePath(MoveRules.PAWN, this.position);
+    public void updateFirstMove(String team, Position position) {
+        boolean isBlackTeam = BLACK.isSameTeamName(team);
+        boolean isBlackPawnInitPosition = (position.getX() == 7);
+        boolean blackPawnNotMoved = isBlackTeam && isBlackPawnInitPosition;
+        boolean isWhiteTeam = WHITE.isSameTeamName(team);
+        boolean isWhitePawnInitPosition = (position.getX() == 2);
+        boolean whitePawnNotMoved = isWhiteTeam && isWhitePawnInitPosition;
+
+        if (!(blackPawnNotMoved || whitePawnNotMoved)) {
+            firstMoveComplete();
+        }
     }
 }

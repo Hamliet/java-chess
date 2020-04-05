@@ -1,22 +1,11 @@
 package chess.domain.chesspiece;
 
-import chess.domain.Position;
-import chess.domain.Team;
+import chess.domain.game.Team;
 
-import java.util.List;
+import static chess.domain.chesspiece.ChessPieceInfo.ROOK;
 
 public class Rook extends ChessPiece {
-    public Rook(Position position, Team team) {
-        super("r", position, team);
-    }
-
-    @Override
-    public boolean canMove(Position position) {
-        return false;
-    }
-
-    @Override
-    public List<Position> makeCanMovePositions() {
-        return null;
+    public Rook(Team team) {
+        super(ROOK, team);
     }
 }

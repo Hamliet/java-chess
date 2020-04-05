@@ -1,23 +1,11 @@
 package chess.domain.chesspiece;
 
-import chess.domain.Move;
-import chess.domain.Position;
-import chess.domain.Team;
+import chess.domain.game.Team;
 
-import java.util.List;
+import static chess.domain.chesspiece.ChessPieceInfo.KNIGHT;
 
 public class Knight extends ChessPiece {
-    public Knight(Position position, Team team) {
-        super("n", position, team);
-    }
-
-    @Override
-    public boolean canMove(Position position) {
-        return false;
-    }
-
-    @Override
-    public List<Position> makeCanMovePositions() {
-        return Move.makeKnightPath(this.position);
+    public Knight(Team team) {
+        super(KNIGHT, team);
     }
 }

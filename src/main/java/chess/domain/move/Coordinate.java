@@ -1,22 +1,20 @@
-package chess.domain;
+package chess.domain.move;
 
 import java.util.Objects;
 
 public class Coordinate {
     private final int coordinate;
 
-    public Coordinate(int coordinate) {
-        if (coordinate < 1 || coordinate > 8) {
-            throw new IllegalArgumentException();
-        }
+    private Coordinate(int coordinate) {
         this.coordinate = coordinate;
     }
 
-    public Coordinate(char coordinate) {
-        if (coordinate < 'a' || coordinate > 'h') {
-            throw new IllegalArgumentException();
-        }
-        this.coordinate = coordinate - 'a' + 1;
+    public static Coordinate of(String coordinate) {
+        return of(Integer.parseInt(coordinate));
+    }
+
+    public static Coordinate of(int coordinate) {
+        return new Coordinate(coordinate);
     }
 
     public int getCoordinate() {
